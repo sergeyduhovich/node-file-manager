@@ -1,11 +1,28 @@
 import readline from "readline";
 import * as Constants from "./src/constants.js";
 import { parseArgumentsWithEqualSign } from "./src/parseArguments.js";
+import { up as commandUp } from "./src/commands/up.js";
 
 const userName = parseArgumentsWithEqualSign("username");
 let currentDirectory = process.env["HOME"];
 
-const knownCommands = ["up", "cd", "ls", "cat", "add", "rn", "cp", "mv", "rm", "os", "hash"];
+const upWithDefaultArguments = (_) => {
+  currentDirectory = commandUp(currentDirectory);
+};
+
+const knownCommands = {
+  up: upWithDefaultArguments,
+  cd: upWithDefaultArguments,
+  ls: upWithDefaultArguments,
+  cat: upWithDefaultArguments,
+  add: upWithDefaultArguments,
+  rn: upWithDefaultArguments,
+  cp: upWithDefaultArguments,
+  mv: upWithDefaultArguments,
+  rm: upWithDefaultArguments,
+  os: upWithDefaultArguments,
+  hash: upWithDefaultArguments,
+};
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -35,12 +52,14 @@ rl.on("line", (line) => {
 
 function handleCommand(line) {
   const [command, ...args] = line.split(" ");
-
-  const foundCommand = knownCommands.find((item) => item === command);
+  const foundCommand = command in knownCommands;
 
   if (!foundCommand) {
     console.log(Constants.invalidInput);
   } else {
+    let commandFunction = knownCommands[command];
+    commandFunction(args);
+
     console.log(`command is ${command}\n arguments are ${args}`);
     printDirectory(currentDirectory);
   }

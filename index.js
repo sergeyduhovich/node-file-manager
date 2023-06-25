@@ -1,27 +1,29 @@
 import readline from "readline";
+import { homedir } from "os";
 import * as Constants from "./src/constants.js";
 import { parseArgumentsWithEqualSign } from "./src/parseArguments.js";
 import { up as commandUp } from "./src/commands/up.js";
+import { ls as commandLs } from "./src/commands/ls.js";
 
 const userName = parseArgumentsWithEqualSign("username");
-let currentDirectory = process.env["HOME"];
+let currentDirectory = homedir();
 
-const upWithDefaultArguments = (_) => {
-  currentDirectory = commandUp(currentDirectory);
+const commandUpSideEffect = (args) => {
+  currentDirectory = commandUp(args);
 };
 
 const knownCommands = {
-  up: upWithDefaultArguments,
-  cd: upWithDefaultArguments,
-  ls: upWithDefaultArguments,
-  cat: upWithDefaultArguments,
-  add: upWithDefaultArguments,
-  rn: upWithDefaultArguments,
-  cp: upWithDefaultArguments,
-  mv: upWithDefaultArguments,
-  rm: upWithDefaultArguments,
-  os: upWithDefaultArguments,
-  hash: upWithDefaultArguments,
+  up: commandUpSideEffect,
+  cd: commandUpSideEffect,
+  ls: commandLs,
+  cat: commandUpSideEffect,
+  add: commandUpSideEffect,
+  rn: commandUpSideEffect,
+  cp: commandUpSideEffect,
+  mv: commandUpSideEffect,
+  rm: commandUpSideEffect,
+  os: commandUpSideEffect,
+  hash: commandUpSideEffect,
 };
 
 const rl = readline.createInterface({
@@ -50,7 +52,7 @@ rl.on("line", (line) => {
   rl.prompt();
 });
 
-function handleCommand(line) {
+async function handleCommand(line) {
   const [command, ...args] = line.split(" ");
   const foundCommand = command in knownCommands;
 
@@ -58,9 +60,7 @@ function handleCommand(line) {
     console.log(Constants.invalidInput);
   } else {
     let commandFunction = knownCommands[command];
-    commandFunction(args);
-
-    console.log(`command is ${command}\n arguments are ${args}`);
+    await commandFunction([currentDirectory, ...args]);
     printDirectory(currentDirectory);
   }
 }

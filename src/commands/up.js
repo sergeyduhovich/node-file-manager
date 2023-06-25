@@ -1,6 +1,7 @@
 import { dirname } from "path";
 
-const up = (currentDirectory) => {
+const up = (args) => {
+  const currentDirectory = args[0];
   return dirname(currentDirectory);
 };
 

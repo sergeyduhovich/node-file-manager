@@ -3,6 +3,9 @@ import * as Constants from "./src/constants.js";
 import { parseArgumentsWithEqualSign } from "./src/parseArguments.js";
 
 const userName = parseArgumentsWithEqualSign("username");
+let currentDirectory = process.env["HOME"];
+
+const knownCommands = ["up", "cd", "ls", "cat", "add", "rn", "cp", "mv", "rm", "os", "hash"];
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -12,7 +15,7 @@ const rl = readline.createInterface({
 
 console.log(Constants.greeting(userName));
 
-printCurrentDirectory();
+printDirectory(currentDirectory);
 
 rl.prompt();
 
@@ -32,7 +35,15 @@ rl.on("line", (line) => {
 
 function handleCommand(line) {
   const [command, ...args] = line.split(" ");
-  console.log(`command is ${command}\n arguments are ${args}`);
+
+  const foundCommand = knownCommands.find((item) => item === command);
+
+  if (!foundCommand) {
+    console.log(Constants.invalidInput);
+  } else {
+    console.log(`command is ${command}\n arguments are ${args}`);
+    printDirectory(currentDirectory);
+  }
 }
 
 rl.on("SIGINT", () => {
@@ -40,6 +51,6 @@ rl.on("SIGINT", () => {
   rl.close();
 });
 
-function printCurrentDirectory() {
-  console.log(Constants.youAreInPath(process.cwd()));
+function printDirectory(path) {
+  console.log(Constants.youAreInPath(path));
 }

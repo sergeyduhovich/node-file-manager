@@ -4,6 +4,7 @@ import * as Constants from "./src/constants.js";
 import { parseArgumentsWithEqualSign } from "./src/parseArguments.js";
 import { up as commandUp } from "./src/commands/up.js";
 import { ls as commandLs } from "./src/commands/ls.js";
+import { cd as commandCd } from "./src/commands/cd.js";
 
 const userName = parseArgumentsWithEqualSign("username");
 let currentDirectory = homedir();
@@ -12,9 +13,13 @@ const commandUpSideEffect = (args) => {
   currentDirectory = commandUp(args);
 };
 
+const commandCdSideEffect = async (args) => {
+  currentDirectory = await commandCd(args);
+};
+
 const knownCommands = {
   up: commandUpSideEffect,
-  cd: commandUpSideEffect,
+  cd: commandCdSideEffect,
   ls: commandLs,
   cat: commandUpSideEffect,
   add: commandUpSideEffect,
@@ -60,8 +65,12 @@ async function handleCommand(line) {
     console.log(Constants.invalidInput);
   } else {
     let commandFunction = knownCommands[command];
-    await commandFunction([currentDirectory, ...args]);
-    printDirectory(currentDirectory);
+    try {
+      await commandFunction([currentDirectory, ...args]);
+      printDirectory(currentDirectory);
+    } catch (error) {
+      console.log(Constants.operationFailed);
+    }
   }
 }
 

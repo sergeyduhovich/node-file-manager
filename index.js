@@ -1,7 +1,8 @@
 import readline from "readline";
 import * as Constants from "./src/constants.js";
+import { parseArgumentsWithEqualSign } from "./src/parseArguments.js";
 
-const userName = "UserName";
+const userName = parseArgumentsWithEqualSign("username");
 
 const rl = readline.createInterface({
   input: process.stdin,

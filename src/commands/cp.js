@@ -33,6 +33,15 @@ const cp = async (args) => {
   const newAbsoluteDirPath = dirname(newAbsoluteFilePath);
 
   try {
+    const pathStats = await stat(oldAbsoluteFilePath);
+    if (!pathStats.isFile()) {
+      throw new Error("file doesn't exist");
+    }
+  } catch (error) {
+    throw new Error("file doesn't exist");
+  }
+
+  try {
     const pathStats = await stat(newAbsoluteDirPath);
     // console.log("isDirectory", pathStats.isDirectory());
   } catch (error) {

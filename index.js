@@ -10,6 +10,7 @@ import { add as commandAdd } from "./src/commands/add.js";
 import { rn as commandRn } from "./src/commands/rn.js";
 import { cp as commandCp } from "./src/commands/cp.js";
 import { mv as commandMv } from "./src/commands/mv.js";
+import { rm as commandRm } from "./src/commands/rm.js";
 
 const userName = parseArgumentsWithEqualSign("username");
 let currentDirectory = homedir();
@@ -31,7 +32,7 @@ const knownCommands = {
   rn: commandRn,
   cp: commandCp,
   mv: commandMv,
-  rm: commandUpSideEffect,
+  rm: commandRm,
   os: commandUpSideEffect,
   hash: commandUpSideEffect,
 };

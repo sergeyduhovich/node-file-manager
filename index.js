@@ -13,6 +13,8 @@ import { mv as commandMv } from "./src/commands/mv.js";
 import { rm as commandRm } from "./src/commands/rm.js";
 import { os as commandOs } from "./src/commands/os.js";
 import { hash as commandHash } from "./src/commands/hash.js";
+import { compress as commandCompress } from "./src/commands/compress.js";
+import { decompress as commandDecompress } from "./src/commands/decompress.js";
 
 const userName = parseArgumentsWithEqualSign("username");
 let currentDirectory = homedir();
@@ -37,6 +39,8 @@ const knownCommands = {
   rm: commandRm,
   os: commandOs,
   hash: commandHash,
+  compress: commandCompress,
+  decompress: commandDecompress,
 };
 
 const rl = readline.createInterface({

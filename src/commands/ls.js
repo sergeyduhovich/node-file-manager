@@ -4,7 +4,7 @@ import { join } from "path";
 const ls = async (args) => {
   const currentDirectory = args[0];
   const files = await readdir(currentDirectory);
-  const filesTable = {};
+  const filesToLog = [];
 
   for (let i = 0; i < files.length; i++) {
     const fileName = files[i];
@@ -17,11 +17,19 @@ const ls = async (args) => {
       } else if (pathStats.isFile()) {
         type = "file";
       }
-      filesTable[i] = { Name: fileName, Type: type };
+
+      filesToLog.push({ Name: fileName, Type: type });
     } catch (error) {}
   }
 
-  console.table(filesTable, ["Name", "Type"]);
+  filesToLog.sort((a, b) => {
+    if (a.Type !== b.Type) {
+      return a.Type === "directory" ? -1 : 1;
+    }
+    return a.Name.localeCompare(b.Name);
+  });
+
+  console.table(filesToLog);
 };
 
 export { ls };

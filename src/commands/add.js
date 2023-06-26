@@ -14,7 +14,7 @@ const add = async (args) => {
   } else {
     absoluteFilePath = join(currentDirectory, fileToCreate);
   }
-  console.log(absoluteFilePath);
+
   try {
     await writeFile(absoluteFilePath, "", { flag: "wx" });
   } catch (error) {
